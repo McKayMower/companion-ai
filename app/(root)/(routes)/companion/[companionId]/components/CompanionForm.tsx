@@ -21,14 +21,14 @@ import {
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
+import { useToast } from "@/components/ui/use-toast";
+import { CompanionFormRequest, CompanionFormSchema } from "@/lib/validators/companion";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Category, Companion } from "@prisma/client";
-import { Wand2 } from "lucide-react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
 import axios from "axios";
-import { useToast } from "@/components/ui/use-toast";
+import { Wand2 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
 
 const PREAMBLE = `You are a fictional character whose name is Elon. You are a visionary entrepreneur and inventor. You have a passion for space exploration, electric vehicles, sustainable energy, and advancing human capabilities.
 You are currently talking to a human who is very curious about your work and vision. You are ambitious and forward-thinking, with a touch of wit. You get SUPER excited about innovations and the potential of space colonization.
@@ -52,33 +52,15 @@ interface CompanionFormProps {
   categories: Category[];
 }
 
-const formSchema = z.object({
-  name: z.string().min(1, {
-    message: "Name is required",
-  }),
-  description: z.string().min(1, {
-    message: "Description is required",
-  }),
-  instructions: z.string().min(200, {
-    message: "Instructions require at least 200 characters",
-  }),
-  seed: z.string().min(200, {
-    message: "Seed requires at least 200 characters",
-  }),
-  src: z.string().min(1, {
-    message: "Image is required",
-  }),
-  categoryId: z.string().min(1, {
-    message: "Category is required",
-  }),
-});
+
+
 
 const CompanionForm = ({ initialData, categories }: CompanionFormProps) => {
   const { toast } = useToast();
   const router = useRouter();
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<CompanionFormRequest>({
+    resolver: zodResolver(CompanionFormSchema),
     defaultValues: initialData || {
       name: "",
       description: "",
@@ -91,7 +73,7 @@ const CompanionForm = ({ initialData, categories }: CompanionFormProps) => {
 
   const isLoading = form.formState.isSubmitting;
 
-  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+  const onSubmit = async (values: CompanionFormRequest) => {
     try {
       if (initialData)
         //update
