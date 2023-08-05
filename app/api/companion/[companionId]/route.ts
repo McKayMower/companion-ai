@@ -1,6 +1,6 @@
 import prismadb from "@/lib/prismadb";
 import { CompanionFormSchema } from "@/lib/validators/companion";
-import { currentUser } from "@clerk/nextjs";
+import { auth, currentUser } from "@clerk/nextjs";
 import { NextResponse } from "next/server";
 
 interface IParams {
@@ -49,5 +49,28 @@ export async function PATCH(req: Request, params: IParams) {
   } catch (error) {
     console.log("[COMPANION_PATCH]", error);
     return new NextResponse("Internal Error", { status: 500 });
+  }
+}
+
+export async function DELETE(req: Request, params: IParams) {
+  try {
+    const body = await req.json();
+    const { companionId } = params.params;
+    const { userId } = auth();
+
+    if (!userId) return new NextResponse("Unauthorized", { status: 401 });
+
+    const companion = await prismadb.companion.delete({
+      where: {
+        userId: userId, // only allow deletion of companion where userId is id of currently logged in user
+        id: companionId,
+      },
+    });
+
+    return NextResponse.json("Deleted companion.")
+
+  } catch (error) {
+    console.log("[COMPANION_DELETE]", error);
+    return new NextResponse("Internale Error", { status: 500 });
   }
 }
