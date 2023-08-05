@@ -37,11 +37,14 @@ const ChatHeader = ({ companion }: ChatHeaderProps) => {
 
   const onDelete = async () => {
     try {
-      await axios.delete(`/api/companions/${companion.id}`);
+      await axios.delete(`/api/companion/${companion.id}`);
 
       toast({
         description: "Success",
       });
+
+      router.refresh();
+      router.push("/")
     } catch (error) {
       toast({
         description: "Something went wrong.",
@@ -70,7 +73,7 @@ const ChatHeader = ({ companion }: ChatHeaderProps) => {
           </p>
         </div>
       </div>
-      
+
       {/** only if creator of companion */}
       {user?.id === companion.userId && (
         <DropdownMenu>
