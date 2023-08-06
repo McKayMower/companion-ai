@@ -60,8 +60,8 @@ model Message {
 model UserSubscription {
   id                    String    @id @default(uuid())
   userId                String    @unique // comes from clerk
-  stipeCustomerId       String?   @unique @map(name: "stripe_customer_id")
-  stipeSubscriptionId   String?   @unique @map(name: "stripe_subscription_id")
-  stipePriceId          String?   @unique @map(name: "stripe_price_id")
-  stipeCurrentPeriodEnd DateTime? @unique @map(name: "stripe_current_period_end") // check whether subscription has ended or not
+  stripeCustomerId       String?   @unique @map(name: "stripe_customer_id")
+  stripeSubscriptionId   String?   @unique @map(name: "stripe_subscription_id")
+  stripePriceId          String?   @unique @map(name: "stripe_price_id")
+  stripeCurrentPeriodEnd DateTime? @unique @map(name: "stripe_current_period_end") // check whether subscription has ended or not
 }
