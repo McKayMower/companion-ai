@@ -22,9 +22,9 @@ export async function GET(req: Request) {
     });
 
     // user has a subscription, so send to the billing/account page
-    if (userSubscription && userSubscription.stipeCustomerId) {
+    if (userSubscription && userSubscription.stripeCustomerId) {
       const stripeSession = await stripe.billingPortal.sessions.create({
-        customer: userSubscription.stipeCustomerId,
+        customer: userSubscription.stripeCustomerId,
         return_url: settingsUrl,
       });
       return new NextResponse(JSON.stringify({ url: stripeSession.url }));
