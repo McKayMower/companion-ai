@@ -1,4 +1,5 @@
 import prismadb from "@/lib/prismadb";
+import { checkSubscription } from "@/lib/subscription";
 import { CompanionFormSchema } from "@/lib/validators/companion";
 import { currentUser } from "@clerk/nextjs";
 import { AxiosError } from "axios";
@@ -16,8 +17,10 @@ export async function POST(req: Request) {
     if (!user || !user.id || !user.firstName)
       return new NextResponse("Unauthorized", { status: 401 });
 
-    // TODO: check for stripe subscription
     // prevent if not currently subscribed on pro sub
+    const isPro = await checkSubscription();
+    if (!isPro)
+      return new NextResponse("Pro subscription required", { status: 403 });
 
     const companion = await prismadb.companion.create({
       data: {
