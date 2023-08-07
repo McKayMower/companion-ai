@@ -14,10 +14,10 @@ export const checkSubscription = async () => {
       userId: userId,
     },
     select: {
-      stipeCurrentPeriodEnd: true,
-      stipeCustomerId: true,
-      stipePriceId: true,
-      stipeSubscriptionId: true,
+      stripeCurrentPeriodEnd: true,
+      stripeCustomerId: true,
+      stripePriceId: true,
+      stripeSubscriptionId: true,
     },
   });
 
@@ -25,8 +25,8 @@ export const checkSubscription = async () => {
   if (!userSubscription) return false;
 
   const isValid =
-    userSubscription.stipePriceId &&
-    userSubscription.stipeCurrentPeriodEnd?.getTime()! + DAY_IN_MS > Date.now();
+    userSubscription.stripePriceId &&
+    userSubscription.stripeCurrentPeriodEnd?.getTime()! + DAY_IN_MS > Date.now();
 
   return !!isValid; //ensures isValid is always a boolean
 };
