@@ -4,26 +4,25 @@ generator client {
 }
 
 datasource db {
-  provider     = "mysql"
-  url          = env("DATABASE_URL")
-  relationMode = "prisma"
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
 }
 
 model Category {
-  id         String      @id @default(uuid())
+  id         String      @id @default(uuid()) @map("_id")
   name       String
   companions Companion[]
 }
 
 model Companion {
-  id           String @id @default(uuid())
+  id           String @id @default(uuid()) @map("_id")
   userId       String
   userName     String
   src          String
-  name         String @db.Text
+  name         String
   description  String
-  instructions String @db.Text
-  seed         String @db.Text
+  instructions String
+  seed         String
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -43,9 +42,9 @@ enum Role {
 }
 
 model Message {
-  id        String   @id @default(uuid())
+  id        String   @id @default(uuid()) @map("_id")
   role      Role
-  content   String   @db.Text
+  content   String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -58,8 +57,8 @@ model Message {
 }
 
 model UserSubscription {
-  id                    String    @id @default(uuid())
-  userId                String    @unique // comes from clerk
+  id                     String    @id @default(uuid()) @map("_id")
+  userId                 String    @unique // comes from clerk
   stripeCustomerId       String?   @unique @map(name: "stripe_customer_id")
   stripeSubscriptionId   String?   @unique @map(name: "stripe_subscription_id")
   stripePriceId          String?   @unique @map(name: "stripe_price_id")
